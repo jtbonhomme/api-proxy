@@ -26,6 +26,6 @@
     "grunt-wording": "~0.1.6",
     "matchdep": "~0.1.2",
     "colors": "*",
-    "http-proxy": "*"
+    "connect": "*"
   }
 }

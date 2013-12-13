@@ -1,103 +1,111 @@
 var util       = require('util'),
+    connect    = require('connect'),
+    url        = require('url'),
     colors     = require('colors'),
     http       = require('http'),
-    httpProxy  = require('http-proxy'),
-    httpPort   = 80;
-
-var apiUrl     = '192.168.1.1',
-    apiPort    = 80;
+//    httpProxy  = require('http-proxy'),
+    localPort  = 8080,
+    listenPort = 80,
+    directory  = '/Users/jean-thierrybonhomme/Developpements/r7/webapp/public';
 
 var welcome = [
-"   ##   #####  #       #####  #####   ####  #    # #   #", 
-"  #  #  #    # #       #    # #    # #    #  #  #   # # ", 
-" #    # #    # # ##### #    # #    # #    #   ##     #  ", 
-" ###### #####  #       #####  #####  #    #   ##     #  ", 
-" #    # #      #       #      #   #  #    #  #  #    #  ", 
-" #    # #      #       #      #    #  ####  #    #   #  " 
+    "   ##   #####  #       #####  #####   ####  #    # #   #",
+    "  #  #  #    # #       #    # #    # #    #  #  #   # # ",
+    " #    # #    # # ##### #    # #    # #    #   ##     #  ",
+    " ###### #####  #       #####  #####  #    #   ##     #  ",
+    " #    # #      #       #      #   #  #    #  #  #    #  ",
+    " #    # #      #       #      #    #  ####  #    #   #  "
 ].join('\n');
 
 util.puts(welcome.rainbow.bold);
 
-//
-// Create your proxy server
-// It will listen on localhot:80 and send http request to localhost:8080
-//
-//httpProxy.createServer(80, '192.168.1.1').listen(80);
-
-/*httpProxy.createServer(function (req, res, proxy) {
-  //
-  // Put your custom server logic here
-  //
-  proxy.proxyRequest(req, res, {
-    host: '192.168.1.1',
-    port: 80
-  });
-  util.log(res);
-}).listen(80);*/
-
-var http = require( 'http' );
-var url = require( 'url' );
-
-var listen_port = 80;
-
 http.createServer( function( request, response )
 {
-        var url_parts = url.parse( request.url );
+        var url_parts = url.parse( request.url ),
+            options;
 
-        var options = {
-                hostname        : '192.168.1.1',
-                port            : 80,
-                path            : url_parts.path,
-                method          : request.method,
-                headers         : request.headers
-        };
+        console.log("URL : " + url_parts.href);
+        console.log("PATH : " + url_parts.href.split('/')[1]);
+
+
+        switch(url_parts.href.split('/')[1])
+        {
+            case "":
+            case "js":
+            case "img":
+            case "fonts":
+            case "css":
+                options = {
+                        hostname        : '127.0.0.1',
+                        port            : 8080,
+                        path            : url_parts.path,
+                        method          : request.method,
+                        headers         : request.headers
+                };
+                break;
+            default:
+                options = {
+                        hostname        : '10.0.2.13',
+                        port            : 80,
+                        path            : url_parts.path,
+                        method          : request.method,
+                        headers         : request.headers
+                };
+                break;
+        }
+        console.log("HOST : " + options.hostname);
 
         var request_data;
-
+    
         var proxy_client = http.request( options, function( res )
         {
                 console.log( 'Sending request ', options );
-
-                res.on( 'data', function ( chunk )
+    
+             res.on( 'data', function ( chunk )
                 {
                         console.log( 'Write to client ', chunk.length );
                         response.write( chunk, 'binary' );
                         console.log(chunk);
                 } );
-
-                res.on( 'end', function()
+    
+             res.on( 'end', function()
                 {
                         console.log( 'End chunk write to client' );
                         response.end();
                 } );
-
-                res.on( 'error', function ( e )
+    
+             res.on( 'error', function ( e )
                 {
                         console.log( 'Error with client ', e );
                 } );
-
-                response.writeHead( res.statusCode, res.headers );
+    
+             response.writeHead( res.statusCode, res.headers );
         } );
-
-        request.on( 'data', function ( chunk )
+    
+     request.on( 'data', function ( chunk )
         {
                 console.log( 'Write to server ', chunk.length );
+                console.log( chunk );
                 console.log( chunk.toString( 'utf8' ) );
                 request_data = request_data + chunk;
                 proxy_client.write( chunk, 'binary' );
         } );
-
-        request.on( 'end', function()
+    
+     request.on( 'end', function()
         {
                 console.log( 'End chunk write to server' );
                 proxy_client.end();
         } );
-
-        request.on( 'error', function ( e )
+    
+     request.on( 'error', function ( e )
         {
                 console.log( 'Problem with request ', e );
         } );
 
-} ).listen( listen_port );
+} ).listen( listenPort );
 
-console.log( 'Proxy started on port ' + listen_port );
+connect()
+    .use(connect.static( directory ))
+    .listen(localPort);
+
+console.log( 'Proxy started on port ' + listenPort );
