@@ -1,0 +1,31 @@
+{
+  "name": "api-proxy",
+  "private": true,
+  "description": "A rest API proxy for record and replay (testing usage)",
+  "version": "0.0.1",
+  "author": "Jean-Thierry",
+  "engines": {
+    "node": "~>0.10.5",
+    "npm": "~>1.2.18"
+  },
+  "dependencies": {
+    "grunt": "git://github.com/e-jigsaw/grunt#71e631c054",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-compress": "~0.5.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-cssmin": "~0.6.0",
+    "grunt-contrib-imagemin": "~0.1.4",
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-contrib-jst": "~0.5.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-contrib-yuidoc": "~0.4.0",
+    "grunt-mincer": "~0.3.1",
+    "grunt-shell": "~0.2.2",
+    "grunt-wording": "~0.1.6",
+    "matchdep": "~0.1.2",
+    "colors": "*",
+    "http-proxy": "*"
+  }
+}
