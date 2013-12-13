@@ -3,7 +3,6 @@ var util       = require('util'),
     url        = require('url'),
     colors     = require('colors'),
     http       = require('http'),
-//    httpProxy  = require('http-proxy'),
     localPort  = 8080,
     listenPort = 80,
     directory  = '/Users/jean-thierrybonhomme/Developpements/r7/webapp/public';
@@ -27,7 +26,7 @@ http.createServer( function( request, response )
         console.log("URL : " + url_parts.href);
         console.log("PATH : " + url_parts.href.split('/')[1]);
 
-
+        // todo : create an array of hashes [ {ip: "xxx.xxx.xxx.xxx", routes: ["/xxx", "/yyy"] } ] to decide how to serve files
         switch(url_parts.href.split('/')[1])
         {
             case "":
