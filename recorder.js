@@ -23,6 +23,7 @@ http.createServer( function( request, response )
     var url_parts = url.parse( request.url ),
         options;
 
+    console.log("--------------------------------------------------------");
     console.log("URL : " + url_parts.href);
     console.log("PATH : " + url_parts.href.split('/')[1]);
 
@@ -53,6 +54,7 @@ http.createServer( function( request, response )
                 break;
     }
     console.log("HOST : " + options.hostname);
+    console.log("METHOD : " + request.method);
 
     var request_data;
 
@@ -63,7 +65,7 @@ http.createServer( function( request, response )
         res.on( 'data', function ( chunk ) {
             console.log( 'Write to client ', chunk.length );
             response.write( chunk, 'binary' );
-            console.log(chunk);
+            console.log( chunk.toString( 'utf8' ) );
         });
 
         res.on( 'end', function() {
@@ -80,7 +82,6 @@ http.createServer( function( request, response )
     
     request.on( 'data', function ( chunk ) {
         console.log( 'Write to server ', chunk.length );
-        console.log( chunk );
         console.log( chunk.toString( 'utf8' ) );
         request_data = request_data + chunk;
         proxy_client.write( chunk, 'binary' );
